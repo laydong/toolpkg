@@ -8,6 +8,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/laydong/toolpkg"
+	"github.com/laydong/toolpkg/log"
+	"github.com/laydong/toolpkg/utils"
 	"go.uber.org/zap"
 	"io"
 	"io/ioutil"
@@ -20,9 +23,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-	"toolpkg"
-	"toolpkg/log"
-	"toolpkg/utils"
 )
 
 var b3Headers = []string{toolpkg.XtraceKey, toolpkg.RequestIdKey, "x-request-id", "x-b3-traceid", "x-b3-spanid", "x-b3-parentspanid", "x-b3-sampled", "x-b3-flags", "x-ot-span-context", "x-huayu-traffic-tag"}

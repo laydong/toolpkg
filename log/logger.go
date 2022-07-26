@@ -3,13 +3,13 @@ package log
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/laydong/toolpkg"
+	"github.com/laydong/toolpkg/utils"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"log"
 	"os"
 	"time"
-	"toolpkg"
-	"toolpkg/utils"
 )
 
 // InitLog 初始化日志文件 logPath= /home/logs/app/appName/childPath

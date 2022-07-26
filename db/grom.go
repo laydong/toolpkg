@@ -2,6 +2,7 @@ package db
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/laydong/toolpkg/log"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -9,7 +10,6 @@ import (
 	"gorm.io/plugin/dbresolver"
 	"strings"
 	"time"
-	"toolpkg/log"
 )
 
 const (

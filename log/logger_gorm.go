@@ -1,13 +1,13 @@
-package glogs
+package log
 
 import (
-	cloud_utlis "cloud-utlis"
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"gorm.io/gorm/logger"
 	"time"
+	"tool"
 
 	"gorm.io/gorm/utils"
 )
@@ -101,7 +101,7 @@ func gormWriter(ctx context.Context, level string, rows int64, sql, slowLog, lin
 	var requestId string
 	ginCtx, ok := ctx.(*gin.Context)
 	if ok {
-		requestId = ginCtx.GetString(cloud_utlis.RequestIdKey)
+		requestId = ginCtx.GetString(tool.RequestIdKey)
 	}
 	if requestId == "" {
 		requestId = "null"
@@ -126,9 +126,9 @@ func gormWriter(ctx context.Context, level string, rows int64, sql, slowLog, lin
 	switch level {
 	case LevelInfo:
 		Info(msg,
-			zap.Any("datetime", begin.Format(cloud_utlis.TimeFormat)),
+			zap.Any("datetime", begin.Format(tool.TimeFormat)),
 			zap.String("message_type", "dblog"),
-			zap.String(cloud_utlis.RequestIdKey, requestId),
+			zap.String(tool.RequestIdKey, requestId),
 			zap.Any("request", request),
 			zap.String("respon", errMsg),
 			zap.Any("start_time", float64(begin.UnixNano())/1e9),
@@ -137,9 +137,9 @@ func gormWriter(ctx context.Context, level string, rows int64, sql, slowLog, lin
 		)
 	case LevelWarn:
 		Warn(msg,
-			zap.Any("datetime", begin.Format(cloud_utlis.TimeFormat)),
+			zap.Any("datetime", begin.Format(tool.TimeFormat)),
 			zap.String("message_type", "dblog"),
-			zap.String(cloud_utlis.RequestIdKey, requestId),
+			zap.String(tool.RequestIdKey, requestId),
 			zap.Any("request", request),
 			zap.String("respon", errMsg),
 			zap.Any("start_time", float64(begin.UnixNano())/1e9),
@@ -148,9 +148,9 @@ func gormWriter(ctx context.Context, level string, rows int64, sql, slowLog, lin
 		)
 	case LevelError:
 		Error(msg,
-			zap.Any("datetime", begin.Format(cloud_utlis.TimeFormat)),
+			zap.Any("datetime", begin.Format(tool.TimeFormat)),
 			zap.String("message_type", "dblog"),
-			zap.String(cloud_utlis.RequestIdKey, requestId),
+			zap.String(tool.RequestIdKey, requestId),
 			zap.Any("request", request),
 			zap.String("respon", errMsg),
 			zap.Any("start_time", float64(begin.UnixNano())/1e9),

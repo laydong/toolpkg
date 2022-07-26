@@ -1,16 +1,15 @@
-package cloud_utlis
+package tool
 
 import (
-	"cloud-utlis/glogs"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/plugin/dbresolver"
-	"log"
 	"strings"
 	"time"
+	"tool/log"
 )
 
 const (
@@ -35,9 +34,9 @@ var DB *gorm.DB
 
 // InitDB init db
 func InitDB(dsn string, dsn1 ...string) {
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: glogs.Default(logger.Info)})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: log.Default(logger.Info)})
 	if err != nil {
-		log.Printf("[app.gstore] mysql open fail, err=%s", err)
+		//log.Printf("[app.gstore] mysql open fail, err=%s", err)
 		panic(err)
 	}
 	if len(dsn1) > 0 {
@@ -54,7 +53,7 @@ func InitDB(dsn string, dsn1 ...string) {
 		//单库
 		d, err := db.DB()
 		if err != nil {
-			log.Printf("[app.dbx] mysql db fail, err: %s", err.Error())
+			//log.Printf("[app.dbx] mysql db fail, err: %s", err.Error())
 			panic(err)
 		}
 		d.SetMaxOpenConns(defaultPoolMaxOpen)
@@ -71,11 +70,11 @@ func InitDB(dsn string, dsn1 ...string) {
 	}
 	err = DbSurvive(db)
 	if err != nil {
-		log.Printf("[app.gstore] mysql survive fail, err=%s", err)
+		//log.Printf("[app.gstore] mysql survive fail, err=%s", err)
 		panic(err)
 	}
 	DB = db
-	log.Printf("[app.gstore] mysql success")
+	//log.Printf("[app.gstore] mysql success")
 }
 
 func GetDB(c *gin.Context) *gorm.DB {

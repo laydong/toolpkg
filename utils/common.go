@@ -2,7 +2,6 @@ package utils
 
 import (
 	"bytes"
-	cloudutlis "cloud-utlis"
 	"container/list"
 	"crypto/md5"
 	"encoding/base64"
@@ -25,6 +24,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"tool"
 	"unsafe"
 )
 
@@ -234,14 +234,14 @@ func GenerateTraceId() string {
 
 // GetRequestIdKey 获取链路ID
 func GetRequestIdKey(c *gin.Context) (requestId string) {
-	requestId = c.GetHeader(cloudutlis.XtraceKey)
+	requestId = c.GetHeader(tool.XtraceKey)
 	if requestId != "" {
-		c.Set(cloudutlis.RequestIdKey, requestId)
+		c.Set(tool.RequestIdKey, requestId)
 	}
-	requestId = c.GetString(cloudutlis.RequestIdKey)
+	requestId = c.GetString(tool.RequestIdKey)
 	if requestId == "" {
 		requestId = GenerateTraceId()
-		c.Set(cloudutlis.RequestIdKey, requestId)
+		c.Set(tool.RequestIdKey, requestId)
 	}
 	return
 }

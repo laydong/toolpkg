@@ -1,8 +1,6 @@
 package log
 
 import (
-	"cloudTool"
-	"cloudTool/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -10,6 +8,8 @@ import (
 	"log"
 	"os"
 	"time"
+	"toolpkg"
+	"toolpkg/utils"
 )
 
 // InitLog 初始化日志文件 logPath= /home/logs/app/appName/childPath
@@ -58,48 +58,48 @@ func initSugar(lc *Config) *zap.Logger {
 
 func InfoApi(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(cloudTool.TimeFormat)))
-	fields = append(fields, zap.String(cloudTool.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
+	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "api_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
 
 func InfoSdk(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(cloudTool.TimeFormat)))
-	fields = append(fields, zap.String(cloudTool.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
+	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "sdk_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
 
 func InfoDB(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(cloudTool.TimeFormat)))
-	fields = append(fields, zap.String(cloudTool.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
+	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "db_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
 
 func InfoF(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(cloudTool.TimeFormat)))
-	fields = append(fields, zap.String(cloudTool.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
+	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "info_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
 
 func WarnF(c *gin.Context, title string, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(cloudTool.TimeFormat)))
-	fields = append(fields, zap.String(cloudTool.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
+	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "warn_log"))
 	writer(nil, Sugar, LevelWarn, msg, title, fields...)
 }
 
 func ErrorF(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(cloudTool.TimeFormat)))
-	fields = append(fields, zap.String(cloudTool.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
+	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "err_log"))
 	writers(Sugar, LevelError, msg, fields...)
 }

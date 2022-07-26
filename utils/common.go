@@ -24,6 +24,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"toolpkg"
 	"unsafe"
 )
 
@@ -233,14 +234,14 @@ func GenerateTraceId() string {
 
 // GetRequestIdKey 获取链路ID
 func GetRequestIdKey(c *gin.Context) (requestId string) {
-	requestId = c.GetHeader(tool.XtraceKey)
+	requestId = c.GetHeader(toolpkg.XtraceKey)
 	if requestId != "" {
-		c.Set(tool.RequestIdKey, requestId)
+		c.Set(toolpkg.RequestIdKey, requestId)
 	}
-	requestId = c.GetString(tool.RequestIdKey)
+	requestId = c.GetString(toolpkg.RequestIdKey)
 	if requestId == "" {
 		requestId = GenerateTraceId()
-		c.Set(tool.RequestIdKey, requestId)
+		c.Set(toolpkg.RequestIdKey, requestId)
 	}
 	return
 }

@@ -1,4 +1,4 @@
-module cloudTool
+module toolpkg
 
 go 1.16
 

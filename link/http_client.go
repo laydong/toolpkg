@@ -2,9 +2,6 @@ package link
 
 import (
 	"bytes"
-	"cloud-utlis"
-	"cloud-utlis/log"
-	"cloud-utlis/utils"
 	"compress/gzip"
 	"context"
 	"crypto/tls"
@@ -23,60 +20,63 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"tool"
+	"tool/log"
+	"tool/utils"
 )
 
-var b3Headers = []string{cloud_utlis.XtraceKey, cloud_utlis.RequestIdKey, "x-request-id", "x-b3-traceid", "x-b3-spanid", "x-b3-parentspanid", "x-b3-sampled", "x-b3-flags", "x-ot-span-context", "x-huayu-traffic-tag"}
+var b3Headers = []string{tool.XtraceKey, tool.RequestIdKey, "x-request-id", "x-b3-traceid", "x-b3-spanid", "x-b3-parentspanid", "x-b3-sampled", "x-b3-flags", "x-ot-span-context", "x-huayu-traffic-tag"}
 
 // CONST String map of options
 var CONST = map[string]int{
-	"OPT_AUTOREFERER":       cloud_utlis.OPT_AUTOREFERER,
-	"OPT_FOLLOWLOCATION":    cloud_utlis.OPT_FOLLOWLOCATION,
-	"OPT_CONNECTTIMEOUT":    cloud_utlis.OPT_CONNECTTIMEOUT,
-	"OPT_CONNECTTIMEOUT_MS": cloud_utlis.OPT_CONNECTTIMEOUT_MS,
-	"OPT_MAXREDIRS":         cloud_utlis.OPT_MAXREDIRS,
-	"OPT_PROXYTYPE":         cloud_utlis.OPT_PROXYTYPE,
-	"OPT_TIMEOUT":           cloud_utlis.OPT_TIMEOUT,
-	"OPT_TIMEOUT_MS":        cloud_utlis.OPT_TIMEOUT_MS,
-	"OPT_COOKIEJAR":         cloud_utlis.OPT_COOKIEJAR,
-	"OPT_INTERFACE":         cloud_utlis.OPT_INTERFACE,
-	"OPT_PROXY":             cloud_utlis.OPT_PROXY,
-	"OPT_REFERER":           cloud_utlis.OPT_REFERER,
-	"OPT_USERAGENT":         cloud_utlis.OPT_USERAGENT,
-	"OPT_REDIRECT_POLICY":   cloud_utlis.OPT_REDIRECT_POLICY,
-	"OPT_PROXY_FUNC":        cloud_utlis.OPT_PROXY_FUNC,
-	"OPT_DEBUG":             cloud_utlis.OPT_DEBUG,
-	"OPT_UNSAFE_TLS":        cloud_utlis.OPT_UNSAFE_TLS,
-	"OPT_CONTEXT":           cloud_utlis.OPT_CONTEXT,
+	"OPT_AUTOREFERER":       tool.OPT_AUTOREFERER,
+	"OPT_FOLLOWLOCATION":    tool.OPT_FOLLOWLOCATION,
+	"OPT_CONNECTTIMEOUT":    tool.OPT_CONNECTTIMEOUT,
+	"OPT_CONNECTTIMEOUT_MS": tool.OPT_CONNECTTIMEOUT_MS,
+	"OPT_MAXREDIRS":         tool.OPT_MAXREDIRS,
+	"OPT_PROXYTYPE":         tool.OPT_PROXYTYPE,
+	"OPT_TIMEOUT":           tool.OPT_TIMEOUT,
+	"OPT_TIMEOUT_MS":        tool.OPT_TIMEOUT_MS,
+	"OPT_COOKIEJAR":         tool.OPT_COOKIEJAR,
+	"OPT_INTERFACE":         tool.OPT_INTERFACE,
+	"OPT_PROXY":             tool.OPT_PROXY,
+	"OPT_REFERER":           tool.OPT_REFERER,
+	"OPT_USERAGENT":         tool.OPT_USERAGENT,
+	"OPT_REDIRECT_POLICY":   tool.OPT_REDIRECT_POLICY,
+	"OPT_PROXY_FUNC":        tool.OPT_PROXY_FUNC,
+	"OPT_DEBUG":             tool.OPT_DEBUG,
+	"OPT_UNSAFE_TLS":        tool.OPT_UNSAFE_TLS,
+	"OPT_CONTEXT":           tool.OPT_CONTEXT,
 }
 
 // Default options for any clients.
 var defaultOptions = map[int]interface{}{
-	cloud_utlis.OPT_FOLLOWLOCATION: true,
-	cloud_utlis.OPT_MAXREDIRS:      10,
-	cloud_utlis.OPT_AUTOREFERER:    true,
-	cloud_utlis.OPT_USERAGENT:      "client",
-	cloud_utlis.OPT_COOKIEJAR:      true,
-	cloud_utlis.OPT_DEBUG:          false,
+	tool.OPT_FOLLOWLOCATION: true,
+	tool.OPT_MAXREDIRS:      10,
+	tool.OPT_AUTOREFERER:    true,
+	tool.OPT_USERAGENT:      "client",
+	tool.OPT_COOKIEJAR:      true,
+	tool.OPT_DEBUG:          false,
 }
 
 // These options affect transport, transport may not be reused if you change any
 // of these options during a request.
 var transportOptions = []int{
-	cloud_utlis.OPT_CONNECTTIMEOUT,
-	cloud_utlis.OPT_CONNECTTIMEOUT_MS,
-	cloud_utlis.OPT_PROXYTYPE,
-	cloud_utlis.OPT_TIMEOUT,
-	cloud_utlis.OPT_TIMEOUT_MS,
-	cloud_utlis.OPT_INTERFACE,
-	cloud_utlis.OPT_PROXY,
-	cloud_utlis.OPT_PROXY_FUNC,
-	cloud_utlis.OPT_UNSAFE_TLS,
+	tool.OPT_CONNECTTIMEOUT,
+	tool.OPT_CONNECTTIMEOUT_MS,
+	tool.OPT_PROXYTYPE,
+	tool.OPT_TIMEOUT,
+	tool.OPT_TIMEOUT_MS,
+	tool.OPT_INTERFACE,
+	tool.OPT_PROXY,
+	tool.OPT_PROXY_FUNC,
+	tool.OPT_UNSAFE_TLS,
 }
 
 // These options affect cookie jar, jar may not be reused if you change any of
 // these options during a request.
 var jarOptions = []int{
-	cloud_utlis.OPT_COOKIEJAR,
+	tool.OPT_COOKIEJAR,
 }
 
 func DefaultClient() *HttpClient {
@@ -130,14 +130,14 @@ func prepareRequest(method string, url_ string, headers map[string]string,
 	}
 
 	// OPT_REFERER
-	if referer, ok := options[cloud_utlis.OPT_REFERER]; ok {
+	if referer, ok := options[tool.OPT_REFERER]; ok {
 		if refererStr, ok := referer.(string); ok {
 			req.Header.Set("Referer", refererStr)
 		}
 	}
 
 	// OPT_USERAGENT
-	if useragent, ok := options[cloud_utlis.OPT_USERAGENT]; ok {
+	if useragent, ok := options[tool.OPT_USERAGENT]; ok {
 		if useragentStr, ok := useragent.(string); ok {
 			req.Header.Set("User-Agent", useragentStr)
 		}
@@ -158,13 +158,13 @@ func prepareTransport(options map[int]interface{}) (http.RoundTripper, error) {
 
 	var connectTimeout time.Duration
 
-	if connectTimeoutMS_, ok := options[cloud_utlis.OPT_CONNECTTIMEOUT_MS]; ok {
+	if connectTimeoutMS_, ok := options[tool.OPT_CONNECTTIMEOUT_MS]; ok {
 		if connectTimeoutMS, ok := connectTimeoutMS_.(int); ok {
 			connectTimeout = time.Duration(connectTimeoutMS) * time.Millisecond
 		} else {
 			return nil, fmt.Errorf("OPT_CONNECTTIMEOUT_MS must be int")
 		}
-	} else if connectTimeout_, ok := options[cloud_utlis.OPT_CONNECTTIMEOUT]; ok {
+	} else if connectTimeout_, ok := options[tool.OPT_CONNECTTIMEOUT]; ok {
 		if connectTimeout, ok = connectTimeout_.(time.Duration); !ok {
 			if connectTimeoutS, ok := connectTimeout_.(int); ok {
 				connectTimeout = time.Duration(connectTimeoutS) * time.Second
@@ -176,13 +176,13 @@ func prepareTransport(options map[int]interface{}) (http.RoundTripper, error) {
 
 	var timeout time.Duration
 
-	if timeoutMS_, ok := options[cloud_utlis.OPT_TIMEOUT_MS]; ok {
+	if timeoutMS_, ok := options[tool.OPT_TIMEOUT_MS]; ok {
 		if timeoutMS, ok := timeoutMS_.(int); ok {
 			timeout = time.Duration(timeoutMS) * time.Millisecond
 		} else {
 			return nil, fmt.Errorf("OPT_TIMEOUT_MS must be int")
 		}
-	} else if timeout_, ok := options[cloud_utlis.OPT_TIMEOUT]; ok {
+	} else if timeout_, ok := options[tool.OPT_TIMEOUT]; ok {
 		if timeout, ok = timeout_.(time.Duration); !ok {
 			if timeoutS, ok := timeout_.(int); ok {
 				timeout = time.Duration(timeoutS) * time.Second
@@ -221,7 +221,7 @@ func prepareTransport(options map[int]interface{}) (http.RoundTripper, error) {
 	}
 
 	// proxy
-	if proxyFunc_, ok := options[cloud_utlis.OPT_PROXY_FUNC]; ok {
+	if proxyFunc_, ok := options[tool.OPT_PROXY_FUNC]; ok {
 		if proxyFunc, ok := proxyFunc_.(func(*http.Request) (int, string, error)); ok {
 			transport.Proxy = func(req *http.Request) (*url.URL, error) {
 				proxyType, u_, err := proxyFunc(req)
@@ -229,7 +229,7 @@ func prepareTransport(options map[int]interface{}) (http.RoundTripper, error) {
 					return nil, err
 				}
 
-				if proxyType != cloud_utlis.PROXY_HTTP {
+				if proxyType != tool.PROXY_HTTP {
 					return nil, fmt.Errorf("only PROXY_HTTP is currently supported")
 				}
 
@@ -248,14 +248,14 @@ func prepareTransport(options map[int]interface{}) (http.RoundTripper, error) {
 		}
 	} else {
 		var proxytype int
-		if proxytype_, ok := options[cloud_utlis.OPT_PROXYTYPE]; ok {
-			if proxytype, ok = proxytype_.(int); !ok || proxytype != cloud_utlis.PROXY_HTTP {
+		if proxytype_, ok := options[tool.OPT_PROXYTYPE]; ok {
+			if proxytype, ok = proxytype_.(int); !ok || proxytype != tool.PROXY_HTTP {
 				return nil, fmt.Errorf("OPT_PROXYTYPE must be int, and only PROXY_HTTP is currently supported")
 			}
 		}
 
 		var proxy string
-		if proxy_, ok := options[cloud_utlis.OPT_PROXY]; ok {
+		if proxy_, ok := options[tool.OPT_PROXY]; ok {
 			if proxy, ok = proxy_.(string); !ok {
 				return nil, fmt.Errorf("OPT_PROXY must be string")
 			}
@@ -272,7 +272,7 @@ func prepareTransport(options map[int]interface{}) (http.RoundTripper, error) {
 	}
 
 	// TLS
-	if unsafe_tls_, found := options[cloud_utlis.OPT_UNSAFE_TLS]; found {
+	if unsafe_tls_, found := options[tool.OPT_UNSAFE_TLS]; found {
 		var unsafe_tls, _ = unsafe_tls_.(bool)
 		var tls_config = transport.TLSClientConfig
 		if tls_config == nil {
@@ -289,20 +289,20 @@ func prepareTransport(options map[int]interface{}) (http.RoundTripper, error) {
 func prepareRedirect(options map[int]interface{}) (func(req *http.Request, via []*http.Request) error, error) {
 	var redirectPolicy func(req *http.Request, via []*http.Request) error
 
-	if redirectPolicy_, ok := options[cloud_utlis.OPT_REDIRECT_POLICY]; ok {
+	if redirectPolicy_, ok := options[tool.OPT_REDIRECT_POLICY]; ok {
 		if redirectPolicy, ok = redirectPolicy_.(func(*http.Request, []*http.Request) error); !ok {
 			return nil, fmt.Errorf("OPT_REDIRECT_POLICY is not a desired function")
 		}
 	} else {
 		var followlocation bool
-		if followlocation_, ok := options[cloud_utlis.OPT_FOLLOWLOCATION]; ok {
+		if followlocation_, ok := options[tool.OPT_FOLLOWLOCATION]; ok {
 			if followlocation, ok = followlocation_.(bool); !ok {
 				return nil, fmt.Errorf("OPT_FOLLOWLOCATION must be bool")
 			}
 		}
 
 		var maxredirs int
-		if maxredirs_, ok := options[cloud_utlis.OPT_MAXREDIRS]; ok {
+		if maxredirs_, ok := options[tool.OPT_MAXREDIRS]; ok {
 			if maxredirs, ok = maxredirs_.(int); !ok {
 				return nil, fmt.Errorf("OPT_MAXREDIRS must be int")
 			}
@@ -341,7 +341,7 @@ func prepareRedirect(options map[int]interface{}) (func(req *http.Request, via [
 func prepareJar(options map[int]interface{}) (http.CookieJar, error) {
 	var jar http.CookieJar
 	var err error
-	if optCookieJar_, ok := options[cloud_utlis.OPT_COOKIEJAR]; ok {
+	if optCookieJar_, ok := options[tool.OPT_COOKIEJAR]; ok {
 		// is bool
 		if optCookieJar, ok := optCookieJar_.(bool); ok {
 			// default jar
@@ -674,7 +674,7 @@ func (client *HttpClient) Do(method string, url string, heads map[string]string,
 	client.reqLog.URL = url
 	client.reqLog.Method = method
 
-	if debugEnabled, ok := options[cloud_utlis.OPT_DEBUG]; ok {
+	if debugEnabled, ok := options[tool.OPT_DEBUG]; ok {
 		if debugEnabled.(bool) {
 			dump, err := httputil.DumpRequestOut(req, true)
 			if err == nil {
@@ -691,7 +691,7 @@ func (client *HttpClient) Do(method string, url string, heads map[string]string,
 		}
 	}
 
-	if ctx, ok := options[cloud_utlis.OPT_CONTEXT]; ok {
+	if ctx, ok := options[tool.OPT_CONTEXT]; ok {
 		if c, ok := ctx.(context.Context); ok {
 			req = req.WithContext(c)
 		}

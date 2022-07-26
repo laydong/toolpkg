@@ -110,11 +110,11 @@ func writer(r *http.Request, logger *zap.Logger, level, msg string, title string
 		return
 	}
 
-	requestID := r.Header.Get(RequestIDName)
+	//requestID := r.Header.Get(RequestIDName)
 	originAppName := r.Header.Get(HeaderAppName)
 	path := r.RequestURI
 	fields = append(fields, zap.String(KeyPath, path),
-		zap.String(RequestIDName, requestID),
+		//zap.String(RequestIDName, requestID),
 		zap.String(KeyTitle, title),
 		zap.String(KeyOriginAppName, originAppName))
 	do(logger, level, msg, fields...)

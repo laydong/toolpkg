@@ -44,7 +44,8 @@ func InitDB(dsn string, dsn1 ...string) {
 		for _, v := range dsn1 {
 			replicas = append(replicas, mysql.Open(v))
 		}
-	} else {
+	}
+	if len(replicas) == 0 {
 		//单库
 		replicas = append(replicas, mysql.Open(dsn))
 	}

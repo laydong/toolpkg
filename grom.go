@@ -1,6 +1,7 @@
-package tool
+package cloudTool
 
 import (
+	"cloudTool/log"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
@@ -9,7 +10,6 @@ import (
 	"gorm.io/plugin/dbresolver"
 	"strings"
 	"time"
-	"tool/log"
 )
 
 const (

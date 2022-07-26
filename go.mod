@@ -1,4 +1,4 @@
-module tool
+module cloudTool
 
 go 1.16
 
@@ -15,7 +15,7 @@ require (
 	go.mongodb.org/mongo-driver v1.10.0
 	go.uber.org/zap v1.21.0
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
-	gorm.io/driver/mysql v1.3.5
+	gorm.io/driver/mysql v1.3.5 // indirect
 	gorm.io/gorm v1.23.8
 	gorm.io/plugin/dbresolver v1.2.1
 )

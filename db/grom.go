@@ -52,8 +52,9 @@ func InitDB(dsn string, dsn1 ...string) {
 	} else {
 		//单库
 		db.Use(dbresolver.Register(dbresolver.Config{
-			Sources: []gorm.Dialector{mysql.Open(dsn)},
-			Policy:  dbresolver.RandomPolicy{},
+			Sources:  []gorm.Dialector{mysql.Open(dsn)},
+			Replicas: []gorm.Dialector{mysql.Open(dsn)},
+			Policy:   dbresolver.RandomPolicy{},
 		}).SetConnMaxIdleTime(defaultPoolMaxIdle).
 			SetConnMaxLifetime(defaultConnMaxLifeTime).
 			SetMaxIdleConns(defaultPoolMaxIdle).

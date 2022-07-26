@@ -1,4 +1,4 @@
-package cloudTool
+package db
 
 import (
 	"github.com/olivere/elastic/v6"

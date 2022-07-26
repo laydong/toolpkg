@@ -39,27 +39,24 @@ func InitDB(dsn string, dsn1 ...string) {
 		//log.Printf("[app.gstore] mysql open fail, err=%s", err)
 		panic(err)
 	}
+	var replicas []gorm.Dialector
 	if len(dsn1) > 0 {
-		//主从库
-		db.Use(dbresolver.Register(dbresolver.Config{
-			Sources:  []gorm.Dialector{mysql.Open(dsn)},
-			Replicas: []gorm.Dialector{mysql.Open(dsn1[0])},
-			Policy:   dbresolver.RandomPolicy{},
-		}).SetConnMaxIdleTime(defaultPoolMaxIdle).
-			SetConnMaxLifetime(defaultConnMaxLifeTime).
-			SetMaxIdleConns(defaultPoolMaxIdle).
-			SetMaxOpenConns(defaultPoolMaxOpen))
+		for _, v := range dsn1 {
+			replicas = append(replicas, mysql.Open(v))
+		}
 	} else {
 		//单库
-		db.Use(dbresolver.Register(dbresolver.Config{
-			Sources:  []gorm.Dialector{mysql.Open(dsn)},
-			Replicas: []gorm.Dialector{mysql.Open(dsn)},
-			Policy:   dbresolver.RandomPolicy{},
-		}).SetConnMaxIdleTime(defaultPoolMaxIdle).
-			SetConnMaxLifetime(defaultConnMaxLifeTime).
-			SetMaxIdleConns(defaultPoolMaxIdle).
-			SetMaxOpenConns(defaultPoolMaxOpen))
+		replicas = append(replicas, mysql.Open(dsn))
 	}
+	//主从库
+	db.Use(dbresolver.Register(dbresolver.Config{
+		Sources:  []gorm.Dialector{mysql.Open(dsn)},
+		Replicas: replicas,
+		Policy:   dbresolver.RandomPolicy{},
+	}).SetConnMaxIdleTime(defaultPoolMaxIdle).
+		SetConnMaxLifetime(defaultConnMaxLifeTime).
+		SetMaxIdleConns(defaultPoolMaxIdle).
+		SetMaxOpenConns(defaultPoolMaxOpen))
 
 	err = Initialize(db)
 	//执行sql 主从
@@ -73,7 +70,6 @@ func InitDB(dsn string, dsn1 ...string) {
 		panic(err)
 	}
 	DB = db
-	//log.Printf("[app.gstore] mysql success")
 }
 
 func GetDB(c *gin.Context) *gorm.DB {

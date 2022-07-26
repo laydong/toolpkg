@@ -6,6 +6,7 @@ require (
 	github.com/Shopify/sarama v1.30.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/natefinch/lumberjack v2.0.0+incompatible // indirect
 	github.com/olivere/elastic v6.2.37+incompatible // indirect
 	github.com/olivere/elastic/v6 v6.2.1
 	github.com/openzipkin/zipkin-go v0.4.0

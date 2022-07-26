@@ -51,15 +51,13 @@ func InitDB(dsn string, dsn1 ...string) {
 			SetMaxOpenConns(defaultPoolMaxOpen))
 	} else {
 		//单库
-		d, err := db.DB()
-		if err != nil {
-			//log.Printf("[app.dbx] mysql db fail, err: %s", err.Error())
-			panic(err)
-		}
-		d.SetMaxOpenConns(defaultPoolMaxOpen)
-		d.SetMaxIdleConns(defaultPoolMaxIdle)
-		d.SetConnMaxLifetime(defaultConnMaxLifeTime)
-		d.SetConnMaxIdleTime(defaultConnMaxIdleTime)
+		db.Use(dbresolver.Register(dbresolver.Config{
+			Sources: []gorm.Dialector{mysql.Open(dsn)},
+			Policy:  dbresolver.RandomPolicy{},
+		}).SetConnMaxIdleTime(defaultPoolMaxIdle).
+			SetConnMaxLifetime(defaultConnMaxLifeTime).
+			SetMaxIdleConns(defaultPoolMaxIdle).
+			SetMaxOpenConns(defaultPoolMaxOpen))
 	}
 
 	err = Initialize(db)

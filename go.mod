@@ -1,4 +1,4 @@
-module toolpkg
+module github.com/laydong/toolpkg
 
 go 1.16
 

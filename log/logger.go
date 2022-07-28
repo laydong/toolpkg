@@ -25,7 +25,7 @@ func initSugar(lc *Config) *zap.Logger {
 	loglevel := zapcore.InfoLevel
 	defaultLogLevel.SetLevel(loglevel)
 
-	logPath := fmt.Sprintf("%s/%s/%s", lc.logPath, lc.appName, lc.childPath)
+	logPath := fmt.Sprintf("%s/%s/%s", lc.logPath, lc.appName, fmt.Sprintf(lc.childPath, time.Now().Format("2006-01-02")))
 
 	var core zapcore.Core
 	//打印至文件中

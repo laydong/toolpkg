@@ -3,7 +3,6 @@ package db
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/laydong/toolpkg/log"
-	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -73,10 +72,12 @@ func InitDB(dsn string, dsn1 ...string) {
 	DB = db
 }
 
-func GetDB(c *gin.Context) *gorm.DB {
-	key := viper.GetString("mysql.db_name")
-	if key == "" {
+func GetDB(c *gin.Context, dbNmae ...string) *gorm.DB {
+	key := ""
+	if dbNmae[0] == "" {
 		key = "grom_cxt"
+	} else {
+		key = dbNmae[0]
 	}
 	return DB.Set(key, c).WithContext(c)
 }

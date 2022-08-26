@@ -73,10 +73,8 @@ func InitDB(dsn string, dsn1 ...string) {
 }
 
 func GetDB(c *gin.Context, dbNmae ...string) *gorm.DB {
-	key := ""
-	if dbNmae[0] == "" {
-		key = "grom_cxt"
-	} else {
+	key := "grom_cxt"
+	if len(dbNmae) > 0 {
 		key = dbNmae[0]
 	}
 	return DB.Set(key, c).WithContext(c)

@@ -46,6 +46,8 @@ type Config struct {
 
 type LogOptionFunc func(*Config)
 
+type Field = zap.Field
+
 var (
 	Sugar *zap.Logger
 

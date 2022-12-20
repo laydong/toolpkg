@@ -118,3 +118,27 @@ func Info(template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
 	writers(Sugar, LevelInfo, msg, fields...)
 }
+
+func InfoLogId(logId, template string, args ...interface{}) {
+	msg, fields := dealWithArgs(template, args...)
+	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
+	fields = append(fields, zap.String(toolpkg.RequestIdKey, logId))
+	fields = append(fields, zap.String(MessageType, "info_log"))
+	writers(Sugar, LevelError, msg, fields...)
+}
+
+func WarnLogId(logId, template string, args ...interface{}) {
+	msg, fields := dealWithArgs(template, args...)
+	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
+	fields = append(fields, zap.String(toolpkg.RequestIdKey, logId))
+	fields = append(fields, zap.String(MessageType, "warn_log"))
+	writers(Sugar, LevelError, msg, fields...)
+}
+
+func ErrorLogId(logId, template string, args ...interface{}) {
+	msg, fields := dealWithArgs(template, args...)
+	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
+	fields = append(fields, zap.String(toolpkg.RequestIdKey, logId))
+	fields = append(fields, zap.String(MessageType, "err_log"))
+	writers(Sugar, LevelError, msg, fields...)
+}

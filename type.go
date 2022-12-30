@@ -1,5 +1,11 @@
 package toolpkg
 
+import (
+	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
+	"net/http"
+)
+
 const (
 	XtraceKey    = "trace-id"            //外部链路ID
 	RequestIdKey = "request-id"          //链路ID
@@ -35,3 +41,16 @@ const (
 
 	OPT_CONTEXT
 )
+
+func GetNewGinContext() *gin.Context {
+	ctx := new(gin.Context)
+	uid := uuid.NewV4().String()
+	ctx.Request = &http.Request{
+		Header: make(map[string][]string),
+	}
+	ctx.Request.Header.Set(XtraceKey, uid)
+	ctx.Request.Header.Set(RequestIdKey, uid)
+	ctx.Set(RequestIdKey, uid)
+	ctx.Set(XtraceKey, uid)
+	return ctx
+}

@@ -2,7 +2,8 @@ package db
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/laydong/toolpkg/log"
+	"github.com/laydong/toolpkg"
+	"github.com/laydong/toolpkg/logx"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -32,11 +33,11 @@ type DbPoolCfg struct {
 var DB *gorm.DB
 
 // InitDB init db
-func InitDB(dsn string, dsn1 ...string) {
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: log.Default(logger.Info)})
+func InitDB(dsn string, dsn1 ...string) (db *gorm.DB, err error) {
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logx.Default(logger.Info)})
 	if err != nil {
-		//log.Printf("[app.gstore] mysql open fail, err=%s", err)
-		panic(err)
+		logx.ErrorF(toolpkg.GetNewGinContext(), "mysql数据库链接错误", err.Error())
+		return
 	}
 	var replicas []gorm.Dialector
 	if len(dsn1) > 0 {
@@ -59,17 +60,22 @@ func InitDB(dsn string, dsn1 ...string) {
 		SetMaxOpenConns(defaultPoolMaxOpen))
 
 	err = Initialize(db)
+	if err != nil {
+		logx.ErrorF(toolpkg.GetNewGinContext(), "mysql数据库 日志记录错误", err.Error())
+		return
+	}
 	//执行sql 主从
 	registerReplicaCallbacks(db)
 	if err != nil {
+		logx.ErrorF(toolpkg.GetNewGinContext(), "mysql数据库 执行主从 错误", err.Error())
 		return
 	}
 	err = DbSurvive(db)
 	if err != nil {
-		//log.Printf("[app.gstore] mysql survive fail, err=%s", err)
-		panic(err)
+		logx.ErrorF(toolpkg.GetNewGinContext(), "mysql数据库 链接检测失败", err.Error())
 	}
 	DB = db
+	return
 }
 
 func GetDB(c *gin.Context, dbNmae ...string) *gorm.DB {

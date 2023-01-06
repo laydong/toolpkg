@@ -3,47 +3,43 @@ package db
 import (
 	"context"
 	"github.com/go-redis/redis/v8"
-	"log"
+	"github.com/laydong/toolpkg"
+	"github.com/laydong/toolpkg/logx"
 )
 
 const (
 	defaultRedisPoolMinIdle = 2 // 连接池空闲连接数量
 )
 
-var Rdb *redis.Client
-
 // InitRdb 初始化redis
-func InitRdb(addr, password string, db int) {
-	connRdb(redis.Options{
+func InitRdb(addr, password string, num int) (db *redis.Client, err error) {
+	options := redis.Options{
 		Addr:     addr,
 		Password: password,
-		DB:       db,
-	})
-}
-
-func connRdb(options redis.Options) {
+		DB:       num,
+	}
 	if options.MinIdleConns == 0 {
 		options.MinIdleConns = defaultRedisPoolMinIdle
 	}
-	Rdb = redis.NewClient(&options)
-	_, err := Rdb.Ping(context.Background()).Result()
+	db = redis.NewClient(&options)
+	_, err = db.Ping(context.Background()).Result()
 	if err == redis.Nil {
-		log.Printf("[app.gstore] Nil reply returned by Rdb when key does not exist.")
+		logx.ErrorF(toolpkg.GetNewGinContext(), "Nil reply returned by Rdb when key does not exist", err.Error())
+		return
 	} else if err != nil {
-		log.Printf("[app.gstore] redis fail, err=%s", err)
-		panic(err)
-	} else {
-		log.Printf("[app.gstore] redis success")
+		logx.ErrorF(toolpkg.GetNewGinContext(), "redis数据库链接错误", err.Error())
+		return
 	}
-	err = RdbSurvive()
+	err = RdbSurvive(db)
 	if err != nil {
-		panic(err)
+		logx.ErrorF(toolpkg.GetNewGinContext(), "redis数据库存活检测失败", err.Error())
 	}
+	return
 }
 
 // RdbSurvive redis存活检测
-func RdbSurvive() error {
-	err := Rdb.Ping(context.Background()).Err()
+func RdbSurvive(db *redis.Client) error {
+	err := db.Ping(context.Background()).Err()
 	if err == redis.Nil {
 		return nil
 	}

@@ -3,7 +3,7 @@ package httpx
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/laydong/toolpkg/alarmx"
-	"github.com/laydong/toolpkg/log"
+	"github.com/laydong/toolpkg/logx"
 	"github.com/laydong/toolpkg/tracex"
 	"github.com/laydong/toolpkg/utils"
 	uuid "github.com/satori/go.uuid"
@@ -16,7 +16,7 @@ type WebHandlerFunc func(*WebContext)
 // WebContext 继承了 gin.Context, 并且扩展了日志功能
 type WebContext struct {
 	*gin.Context
-	*log.LogContext
+	*logx.LogContext
 	*tracex.TraceContext
 	*alarmx.AlarmContext
 }
@@ -39,7 +39,7 @@ func NewWebContext(ginContext *gin.Context) *WebContext {
 
 	tmp := &WebContext{
 		Context:      ginContext,
-		LogContext:   log.NewLogContext(logId),
+		LogContext:   logx.NewLogContext(logId),
 		TraceContext: tracex.NewTraceContext(ginContext.Request.RequestURI, ginContext.Request.Header),
 	}
 	ginContext.Set(ginFlag, tmp)

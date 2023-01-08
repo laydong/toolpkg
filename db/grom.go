@@ -2,7 +2,6 @@ package db
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/laydong/toolpkg"
 	"github.com/laydong/toolpkg/logx"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -36,7 +35,6 @@ var DB *gorm.DB
 func InitDB(dsn string, dsn1 ...string) (db *gorm.DB, err error) {
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logx.Default(logger.Info)})
 	if err != nil {
-		logx.ErrorF(toolpkg.GetNewGinContext(), "mysql数据库链接错误", err.Error())
 		return
 	}
 	var replicas []gorm.Dialector
@@ -61,18 +59,15 @@ func InitDB(dsn string, dsn1 ...string) (db *gorm.DB, err error) {
 
 	err = Initialize(db)
 	if err != nil {
-		logx.ErrorF(toolpkg.GetNewGinContext(), "mysql数据库 日志记录错误", err.Error())
 		return
 	}
 	//执行sql 主从
 	registerReplicaCallbacks(db)
 	if err != nil {
-		logx.ErrorF(toolpkg.GetNewGinContext(), "mysql数据库 执行主从 错误", err.Error())
 		return
 	}
 	err = DbSurvive(db)
 	if err != nil {
-		logx.ErrorF(toolpkg.GetNewGinContext(), "mysql数据库 链接检测失败", err.Error())
 	}
 	DB = db
 	return

@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/laydong/toolpkg"
-	"github.com/laydong/toolpkg/log"
+	"github.com/laydong/toolpkg/logx"
 	"github.com/laydong/toolpkg/utils"
 	"go.uber.org/zap"
 	"io"
@@ -714,7 +714,7 @@ func (client *HttpClient) Do(method string, url string, heads map[string]string,
 	end := time.Now()
 	elapsed := end.Sub(begin)
 	runTime := fmt.Sprintf("%.3fms", float64(elapsed.Nanoseconds())/1e6)
-	log.InfoSdk(client.cxt, "sdk_log",
+	logx.InfoSdk(client.cxt, "sdk_log",
 		zap.Any("request", client.reqLog),
 		zap.Any("respon", rspLog),
 		zap.Any("start_time", float64(begin.UnixNano())/1e9),

@@ -21,7 +21,6 @@ func recovery(ctx *WebContext) {
 	defer func() {
 		if err := recover(); err != nil {
 			ctx.SpanFinish(ctx.TopSpan)
-			ctx.ErrorF("系统错误, err: %v", err)
 			panic(err)
 		}
 	}()

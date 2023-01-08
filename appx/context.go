@@ -3,7 +3,7 @@ package appx
 import (
 	"github.com/laydong/toolpkg/alarmx"
 	"github.com/laydong/toolpkg/datax"
-	"github.com/laydong/toolpkg/log"
+	"github.com/laydong/toolpkg/logx"
 	"github.com/laydong/toolpkg/tracex"
 	"github.com/laydong/toolpkg/utils"
 	uuid "github.com/satori/go.uuid"
@@ -13,7 +13,7 @@ import (
 // Context is the carrier of request and response
 type Context struct {
 	*datax.MemoryContext
-	*log.LogContext
+	*logx.LogContext
 	*tracex.TraceContext
 	*alarmx.AlarmContext
 }
@@ -25,7 +25,7 @@ func NewDefaultContext(logId string, spanName string) *Context {
 	}
 
 	tmp := &Context{
-		LogContext:    log.NewLogContext(logId),
+		LogContext:    logx.NewLogContext(logId),
 		TraceContext:  tracex.NewTraceContext(spanName, make(map[string][]string)),
 		MemoryContext: datax.NewMemoryContext(),
 	}

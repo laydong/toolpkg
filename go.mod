@@ -15,7 +15,6 @@ require (
 	github.com/openzipkin-contrib/zipkin-go-opentracing v0.5.0
 	github.com/openzipkin/zipkin-go v0.4.1
 	github.com/oschwald/geoip2-golang v1.7.0
-	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	go.mongodb.org/mongo-driver v1.10.0

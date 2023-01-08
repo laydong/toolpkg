@@ -2,11 +2,10 @@ package db
 
 import (
 	"github.com/Shopify/sarama"
-	"github.com/laydong/toolpkg"
-	"github.com/laydong/toolpkg/logx"
 )
 
-/**
+/*
+*
 InitKafkaProducer 获取kafka生产端
 dsn string localhost:9093
 username 账号 可传空
@@ -25,14 +24,14 @@ func InitKafkaProducer(dsn, username, password string) (db *sarama.SyncProducer,
 	// 连接kafka
 	client, er := sarama.NewSyncProducer([]string{dsn}, config)
 	if er != nil {
-		logx.ErrorF(toolpkg.GetNewGinContext(), "kafka生产者链接错误", er.Error())
 		return
 	}
 	defer client.Close()
 	return &client, er
 }
 
-/**InitKafkaConsumer 获取消费端
+/*
+*InitKafkaConsumer 获取消费端
 dsn string localhost:9093
 username 账号 可传空
 password 密码
@@ -50,7 +49,6 @@ func InitKafkaConsumer(dsn, username, password string) (db *sarama.Consumer, err
 	// 连接kafka
 	client, err := sarama.NewConsumer([]string{dsn}, config)
 	if err != nil {
-		logx.ErrorF(toolpkg.GetNewGinContext(), "kafka生产者链接错误", err.Error())
 		return
 	}
 	return &client, err

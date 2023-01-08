@@ -3,7 +3,7 @@ package grpcx
 import (
 	"github.com/laydong/toolpkg/alarmx"
 	"github.com/laydong/toolpkg/datax"
-	"github.com/laydong/toolpkg/log"
+	"github.com/laydong/toolpkg/logx"
 	"github.com/laydong/toolpkg/metautils"
 	"github.com/laydong/toolpkg/tracex"
 	"github.com/laydong/toolpkg/utils"
@@ -15,7 +15,7 @@ import (
 type GrpcContext struct {
 	server *GrpcServer
 
-	*log.LogContext
+	*logx.LogContext
 	*datax.MemoryContext
 	*tracex.TraceContext
 	*alarmx.AlarmContext
@@ -29,7 +29,7 @@ func NewGrpcContext(name string, md metautils.NiceMD) *GrpcContext {
 	}
 
 	c := &GrpcContext{
-		LogContext:    log.NewLogContext(logId),
+		LogContext:    logx.NewLogContext(logId),
 		TraceContext:  tracex.NewTraceContext(name, md),
 		MemoryContext: datax.NewMemoryContext(),
 	}

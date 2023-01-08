@@ -2,7 +2,6 @@ package httpx
 
 import (
 	"bytes"
-	"github.com/laydong/toolpkg"
 	"github.com/laydong/toolpkg/utils"
 	"io/ioutil"
 	"strings"
@@ -51,7 +50,7 @@ func CheckNoLogParams(origin string) bool {
 func ginInterceptor(ctx *WebContext) {
 	w := &responseBodyWriter{body: &bytes.Buffer{}, ResponseWriter: ctx.Writer}
 	ctx.Writer = w
-	if toolpkg.ParamLog() && !CheckNoLogParams(ctx.Request.RequestURI) {
+	if !CheckNoLogParams(ctx.Request.RequestURI) {
 		requestData, _ := ctx.GetRawData()
 		ctx.Request.Body = ioutil.NopCloser(bytes.NewBuffer(requestData))
 		ctx.InfoF("%s", string(requestData),
@@ -63,7 +62,7 @@ func ginInterceptor(ctx *WebContext) {
 
 	ctx.Next()
 
-	if toolpkg.ParamLog() && !CheckNoLogParams(ctx.Request.RequestURI) {
+	if !CheckNoLogParams(ctx.Request.RequestURI) {
 		ctx.InfoF("%s", w.body.String(), ctx.Field("title", "出参"))
 	}
 	ctx.SpanFinish(ctx.TopSpan)

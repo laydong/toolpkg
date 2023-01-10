@@ -44,18 +44,21 @@ const (
 )
 
 var (
-	DefaultAppName       = "app"               // 默认应用名称
-	DefaultAppMode       = "dev"               // 默认应用环境
-	DefaultRunMode       = "debug"             // 默认运行环境
-	DefaultAppVersion    = "1.0.0"             // 默认版本
-	DefaultLogType       = "file"              // 默认日志类型
-	DefaultLogPath       = "/home/logs/app/"   // 默认文件目录
-	DefaultChildPath     = "/file-%s.log"      // 默认子目录
-	DefaultRotationSize  = 32 * 1024 * 1024    // 默认大小为32M
-	DefaultRotationCount = 0                   // 默认不限制
-	DefaultRotationTime  = 24 * time.Hour      // 默认每天轮转一次
-	DefaultNoBuffWrite   = false               // 不不开启无缓冲写入
-	DefaultMaxAge        = 90 * 24 * time.Hour // 默认保留90天
+	DefaultAppName               = "app"               // 默认应用名称
+	DefaultAppMode               = "dev"               // 默认应用环境
+	DefaultRunMode               = "debug"             // 默认运行环境
+	DefaultAppVersion            = "1.0.0"             // 默认版本
+	DefaultLogType               = "file"              // 默认日志类型
+	DefaultLogPath               = "/home/logs/app/"   // 默认文件目录
+	DefaultChildPath             = "/file-%s.log"      // 默认子目录
+	DefaultRotationSize          = 32 * 1024 * 1024    // 默认大小为32M
+	DefaultRotationCount         = 0                   // 默认不限制
+	DefaultRotationTime          = 24 * time.Hour      // 默认每天轮转一次
+	DefaultNoBuffWrite           = false               // 不不开启无缓冲写入
+	DefaultMaxAge                = 90 * 24 * time.Hour // 默认保留90天
+	DefaultTraceType             = "zipkin"            //记录类型 zipkin 和 jaeger
+	DefaultTraceAddr             = ""
+	DefaultTraceMod      float64 = 0
 )
 
 // GetNewGinContext 获取新的上下文

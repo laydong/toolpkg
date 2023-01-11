@@ -14,7 +14,7 @@ import (
 func SetLogAppName(appName string) LogOptionFunc {
 	return func(c *Config) {
 		if appName != "" {
-			c.appName = appName
+			c.AppName = appName
 		}
 	}
 }
@@ -23,7 +23,7 @@ func SetLogAppName(appName string) LogOptionFunc {
 func SetLogAppMode(appMode string) LogOptionFunc {
 	return func(c *Config) {
 		if appMode != "" {
-			c.appMode = appMode
+			c.AppMode = appMode
 		}
 	}
 }
@@ -32,7 +32,7 @@ func SetLogAppMode(appMode string) LogOptionFunc {
 func SetLogType(logType string) LogOptionFunc {
 	return func(c *Config) {
 		if logType != "" {
-			c.logType = logType
+			c.LogType = logType
 		}
 	}
 }
@@ -41,7 +41,7 @@ func SetLogType(logType string) LogOptionFunc {
 func SetLogPath(logPath string) LogOptionFunc {
 	return func(c *Config) {
 		if logPath != "" {
-			c.logPath = logPath
+			c.LogPath = logPath
 		}
 	}
 }
@@ -50,7 +50,7 @@ func SetLogPath(logPath string) LogOptionFunc {
 func SetLogChildPath(childPath string) LogOptionFunc {
 	return func(c *Config) {
 		if childPath != "" {
-			c.childPath = childPath
+			c.ChildPath = childPath
 		}
 	}
 }

@@ -3,7 +3,6 @@ package logx
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/laydong/toolpkg"
 	"github.com/laydong/toolpkg/utils"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -25,11 +24,11 @@ func initSugar(lc *Config) *zap.Logger {
 	loglevel := zapcore.InfoLevel
 	defaultLogLevel.SetLevel(loglevel)
 
-	logPath := fmt.Sprintf("%s/%s/%s", lc.logPath, lc.appName, fmt.Sprintf(lc.childPath, time.Now().Format("2006-01-02")))
+	logPath := fmt.Sprintf("%s/%s/%s", lc.LogPath, lc.AppName, fmt.Sprintf(lc.ChildPath, time.Now().Format("2006-01-02")))
 
 	var core zapcore.Core
 	//打印至文件中
-	if lc.logType == "file" {
+	if lc.LogType == "file" {
 		configs := zap.NewProductionEncoderConfig()
 		configs.FunctionKey = "func"
 		configs.EncodeTime = timeEncoder
@@ -49,7 +48,7 @@ func initSugar(lc *Config) *zap.Logger {
 		log.Printf("[glogs_sugar] log success")
 	}
 
-	filed := zap.Fields(zap.String("app_name", lc.appName), zap.String("app_mode", lc.appMode))
+	filed := zap.Fields(zap.String("app_name", lc.AppName), zap.String("app_mode", lc.AppMode))
 	//return zap.New(core, filed, zap.AddCaller(), zap.AddCallerSkip(3))
 	return zap.New(core, filed)
 	//Sugar = logger.Sugar()
@@ -58,48 +57,48 @@ func initSugar(lc *Config) *zap.Logger {
 
 func InfoApi(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
-	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
+	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "api_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
 
 func InfoSdk(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
-	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
+	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "sdk_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
 
 func InfoDB(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
-	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
+	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "db_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
 
 func InfoF(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
-	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
+	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "info_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
 
 func WarnF(c *gin.Context, title string, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
-	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
+	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "warn_log"))
 	writer(nil, Sugar, LevelWarn, msg, title, fields...)
 }
 
 func ErrorF(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
-	fields = append(fields, zap.String(toolpkg.RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
+	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "err_log"))
 	writers(Sugar, LevelError, msg, fields...)
 }
@@ -121,24 +120,24 @@ func Info(template string, args ...interface{}) {
 
 func InfoLogId(logId, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
-	fields = append(fields, zap.String(toolpkg.RequestIdKey, logId))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
+	fields = append(fields, zap.String(RequestIdKey, logId))
 	fields = append(fields, zap.String(MessageType, "info_log"))
 	writers(Sugar, LevelError, msg, fields...)
 }
 
 func WarnLogId(logId, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
-	fields = append(fields, zap.String(toolpkg.RequestIdKey, logId))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
+	fields = append(fields, zap.String(RequestIdKey, logId))
 	fields = append(fields, zap.String(MessageType, "warn_log"))
 	writers(Sugar, LevelError, msg, fields...)
 }
 
 func ErrorLogId(logId, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
-	fields = append(fields, zap.Any("datetime", time.Now().Format(toolpkg.TimeFormat)))
-	fields = append(fields, zap.String(toolpkg.RequestIdKey, logId))
+	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
+	fields = append(fields, zap.String(RequestIdKey, logId))
 	fields = append(fields, zap.String(MessageType, "err_log"))
 	writers(Sugar, LevelError, msg, fields...)
 }

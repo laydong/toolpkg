@@ -17,10 +17,13 @@ const (
 	//DefaultNoBuffWrite   = false               // 不不开启无缓冲写入
 	//DefaultMaxAge        = 90 * 24 * time.Hour // 默认保留90天
 
-	LevelInfo   = "info"
-	LevelWarn   = "warn"
-	LevelError  = "error"
-	MessageType = "message_type" //日志类型
+	LevelInfo    = "info"
+	LevelWarn    = "warn"
+	LevelError   = "error"
+	MessageType  = "message_type"        //日志类型
+	XtraceKey    = "trace-id"            //外部链路ID
+	RequestIdKey = "request-id"          //链路ID
+	TimeFormat   = "2006-01-02 15:04:05" //默认时间
 )
 
 var (

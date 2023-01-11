@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/laydong/toolpkg"
 	"github.com/oschwald/geoip2-golang"
 	uuid "github.com/satori/go.uuid"
 	"io"
@@ -31,7 +30,9 @@ import (
 const (
 	XForwardedFor = "X-Forwarded-For"
 	XRealIP       = "X-Real-IP"
-	RequestIdKey  = "request_id" // 日志key
+	XtraceKey     = "trace-id"            //外部链路ID
+	RequestIdKey  = "request-id"          //链路ID
+	TimeFormat    = "2006-01-02 15:04:05" //默认时间
 )
 
 //获取用户IP地址
@@ -234,14 +235,14 @@ func GenerateTraceId() string {
 
 // GetRequestIdKey 获取链路ID
 func GetRequestIdKey(c *gin.Context) (requestId string) {
-	requestId = c.GetHeader(toolpkg.XtraceKey)
+	requestId = c.GetHeader(XtraceKey)
 	if requestId != "" {
-		c.Set(toolpkg.RequestIdKey, requestId)
+		c.Set(RequestIdKey, requestId)
 	}
-	requestId = c.GetString(toolpkg.RequestIdKey)
+	requestId = c.GetString(RequestIdKey)
 	if requestId == "" {
 		requestId = GenerateTraceId()
-		c.Set(toolpkg.RequestIdKey, requestId)
+		c.Set(RequestIdKey, requestId)
 	}
 	return
 }

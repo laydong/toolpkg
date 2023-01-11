@@ -12,12 +12,11 @@ import (
 )
 
 // InitLog 初始化日志文件 logPath= /home/logs/app/appName/childPath
-func InitLog(options ...LogOptionFunc) {
-	for _, f := range options {
-		f(DefaultConfig)
-	}
-
-	Sugar = initSugar(DefaultConfig)
+func InitLog(options *Config) {
+	//for _, f := range options {
+	//	f(DefaultConfig)
+	//}
+	Sugar = initSugar(options)
 }
 
 func initSugar(lc *Config) *zap.Logger {

@@ -73,8 +73,6 @@ func (w bodyLogWriter) Write(b []byte) (int, error) {
 type AppConf struct {
 	AppName       string        `json:"app_name"`       // 默认应用名称
 	AppMode       string        `json:"app_mode"`       // 默认应用环境
-	RunMode       string        `json:"run_mode"`       // 默认运行环境
-	AppVersion    string        `json:"app_version"`    // 默认版本
 	LogType       string        `json:"log_type"`       // 默认日志类型
 	LogPath       string        `json:"log_path"`       // 默认文件目录
 	ChildPath     string        `json:"child_path"`     // 默认子目录
@@ -87,44 +85,51 @@ type AppConf struct {
 
 // InitLog 初始化日志服务
 func InitLog(conf AppConf) {
+
+	defaultConfig := logx.Config{
+		AppName:       logx.DefaultAppName,
+		AppMode:       logx.DefaultAppMode,
+		LogType:       logx.DefaultLogType,
+		LogPath:       logx.DefaultLogPath,
+		ChildPath:     logx.DefaultChildPath,
+		RotationSize:  int64(logx.DefaultRotationSize),
+		RotationCount: uint(logx.DefaultRotationCount),
+		NoBuffWrite:   logx.DefaultNoBuffWrite,
+		RotationTime:  logx.DefaultRotationTime,
+		MaxAge:        logx.DefaultMaxAge,
+	}
 	if conf.AppName != "" {
-		logx.DefaultAppName = conf.AppName
+		defaultConfig.AppName = conf.AppName
 	}
 	if conf.AppMode != "" {
-		logx.DefaultAppMode = conf.AppMode
-	}
-	if conf.RunMode != "" {
-		logx.DefaultRunMode = conf.RunMode
-	}
-	if conf.AppVersion != "" {
-		logx.DefaultAppVersion = conf.AppVersion
+		defaultConfig.AppMode = conf.AppMode
 	}
 	if conf.LogType != "" {
-		logx.DefaultLogType = conf.LogType
+		defaultConfig.LogType = conf.LogType
 	}
 	if conf.LogPath != "" {
-		logx.DefaultLogPath = conf.LogPath
+		defaultConfig.LogPath = conf.LogPath
 	}
 	if conf.ChildPath != "" {
-		logx.DefaultChildPath = conf.ChildPath
+		defaultConfig.ChildPath = conf.ChildPath
 	}
 	if conf.RotationSize > 0 {
-		logx.DefaultRotationSize = conf.RotationSize
+		defaultConfig.RotationSize = int64(conf.RotationSize)
 	}
 
 	if conf.RotationCount > 0 {
-		logx.DefaultRotationCount = conf.RotationCount
+		defaultConfig.RotationCount = uint(conf.RotationCount)
 	}
 	if conf.RotationTime > 0 {
-		logx.DefaultRotationTime = conf.RotationTime
+		defaultConfig.RotationTime = conf.RotationTime
 	}
 	if conf.NoBuffWrite != false {
-		logx.DefaultNoBuffWrite = true
+		defaultConfig.NoBuffWrite = true
 	}
 	if conf.MaxAge > 0 {
-		logx.DefaultMaxAge = conf.MaxAge
+		defaultConfig.MaxAge = conf.MaxAge
 	}
-	logx.InitLog()
+	logx.InitLog(&defaultConfig)
 }
 
 // GetNewGinContext 获取新的上下文

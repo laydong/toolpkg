@@ -5,6 +5,7 @@ import (
 	"net/http"
 )
 
+const requestIdKey = "request-id" //链路ID
 type Response struct {
 	Code      int         `json:"code"`
 	Data      interface{} `json:"data"`
@@ -20,7 +21,7 @@ func Result(code int, data interface{}, msg string, c *gin.Context) {
 			code,
 			data,
 			msg,
-			c.GetString("request_id"),
+			c.GetString(requestIdKey),
 		})
 }
 

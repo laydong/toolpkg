@@ -8,6 +8,7 @@ import (
 	"github.com/laydong/toolpkg/logx"
 	"go.uber.org/zap"
 	"io/ioutil"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -84,7 +85,7 @@ type AppConf struct {
 	MaxAge        time.Duration `json:"max_age"`        // 默认保留90天
 }
 
-// SetAppConf 更新配置文件
+// InitLog 初始化日志服务
 func InitLog(conf AppConf) {
 	if conf.AppName != "" {
 		DefaultAppName = conf.AppName
@@ -124,4 +125,18 @@ func InitLog(conf AppConf) {
 		DefaultMaxAge = conf.MaxAge
 	}
 	logx.InitLog()
+}
+
+// GetNewGinContext 获取新的上下文
+func GetNewGinContext() *gin.Context {
+	ctx := new(gin.Context)
+	uid := uuid.New().String()
+	ctx.Request = &http.Request{
+		Header: make(map[string][]string),
+	}
+	ctx.Request.Header.Set(XtraceKey, uid)
+	ctx.Request.Header.Set(RequestIdKey, uid)
+	ctx.Set(RequestIdKey, uid)
+	ctx.Set(XtraceKey, uid)
+	return ctx
 }

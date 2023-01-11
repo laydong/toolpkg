@@ -1,9 +1,6 @@
 package toolpkg
 
 import (
-	"github.com/gin-gonic/gin"
-	uuid "github.com/satori/go.uuid"
-	"net/http"
 	"time"
 )
 
@@ -60,17 +57,3 @@ var (
 	DefaultTraceAddr             = ""
 	DefaultTraceMod      float64 = 0
 )
-
-// GetNewGinContext 获取新的上下文
-func GetNewGinContext() *gin.Context {
-	ctx := new(gin.Context)
-	uid := uuid.NewV4().String()
-	ctx.Request = &http.Request{
-		Header: make(map[string][]string),
-	}
-	ctx.Request.Header.Set(XtraceKey, uid)
-	ctx.Request.Header.Set(RequestIdKey, uid)
-	ctx.Set(RequestIdKey, uid)
-	ctx.Set(XtraceKey, uid)
-	return ctx
-}

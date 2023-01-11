@@ -88,41 +88,41 @@ type AppConf struct {
 // InitLog 初始化日志服务
 func InitLog(conf AppConf) {
 	if conf.AppName != "" {
-		DefaultAppName = conf.AppName
+		logx.DefaultAppName = conf.AppName
 	}
 	if conf.AppMode != "" {
-		DefaultAppMode = conf.AppMode
+		logx.DefaultAppMode = conf.AppMode
 	}
 	if conf.RunMode != "" {
-		DefaultRunMode = conf.RunMode
+		logx.DefaultRunMode = conf.RunMode
 	}
 	if conf.AppVersion != "" {
-		DefaultAppVersion = conf.AppVersion
+		logx.DefaultAppVersion = conf.AppVersion
 	}
 	if conf.LogType != "" {
-		DefaultLogType = conf.LogType
+		logx.DefaultLogType = conf.LogType
 	}
 	if conf.LogPath != "" {
-		DefaultLogPath = conf.LogPath
+		logx.DefaultLogPath = conf.LogPath
 	}
 	if conf.ChildPath != "" {
-		DefaultChildPath = conf.ChildPath
+		logx.DefaultChildPath = conf.ChildPath
 	}
 	if conf.RotationSize > 0 {
-		DefaultRotationSize = conf.RotationSize
+		logx.DefaultRotationSize = conf.RotationSize
 	}
 
 	if conf.RotationCount > 0 {
-		DefaultRotationCount = conf.RotationCount
+		logx.DefaultRotationCount = conf.RotationCount
 	}
 	if conf.RotationTime > 0 {
-		DefaultRotationTime = conf.RotationTime
+		logx.DefaultRotationTime = conf.RotationTime
 	}
 	if conf.NoBuffWrite != false {
-		DefaultNoBuffWrite = true
+		logx.DefaultNoBuffWrite = true
 	}
 	if conf.MaxAge > 0 {
-		DefaultMaxAge = conf.MaxAge
+		logx.DefaultMaxAge = conf.MaxAge
 	}
 	logx.InitLog()
 }

@@ -3,7 +3,7 @@
 package tracex
 
 import (
-	"github.com/laydong/toolpkg"
+	"github.com/laydong/toolpkg/logx"
 	"github.com/laydong/toolpkg/utils"
 	"github.com/opentracing/opentracing-go"
 	"log"
@@ -21,15 +21,15 @@ var tracer opentracing.Tracer
 func getTracer() (opentracing.Tracer, error) {
 	if tracer == nil {
 		var err error
-		switch toolpkg.DefaultTraceType {
+		switch logx.DefaultTraceType {
 		case TraceTypeZipkin:
-			tracer = newZkTracer(toolpkg.DefaultAppName, utils.GetClientIp(), toolpkg.DefaultTraceAddr, toolpkg.DefaultTraceMod)
+			tracer = newZkTracer(logx.DefaultAppName, utils.GetClientIp(), logx.DefaultTraceAddr, logx.DefaultTraceMod)
 			if err != nil {
 				return nil, err
 			}
 			log.Printf("[app] tracer success")
 		case TraceTypeJaeger:
-			tracer = newJTracer(toolpkg.DefaultAppName, toolpkg.DefaultTraceAddr, toolpkg.DefaultTraceMod)
+			tracer = newJTracer(logx.DefaultAppName, logx.DefaultTraceAddr, logx.DefaultTraceMod)
 			if err != nil {
 				return nil, err
 			}

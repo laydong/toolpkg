@@ -5,7 +5,6 @@ import (
 	"net/http"
 )
 
-const requestIdKey = "request-id" //链路ID
 type Response struct {
 	Code      int         `json:"code"`
 	Data      interface{} `json:"data"`
@@ -13,7 +12,7 @@ type Response struct {
 	RequestID string      `json:"request_id"`
 }
 
-func Result(code int, data interface{}, msg string, c *gin.Context) {
+func Result(c *gin.Context, code int, data interface{}, msg string) {
 	// 开始时间
 	c.JSON(
 		http.StatusOK,
@@ -21,42 +20,46 @@ func Result(code int, data interface{}, msg string, c *gin.Context) {
 			code,
 			data,
 			msg,
-			c.GetString(requestIdKey),
+			c.GetString("request-id"),
 		})
 }
 
 func Ok(c *gin.Context) {
-	Result(http.StatusOK, map[string]interface{}{}, "操作成功", c)
+	Result(c, http.StatusOK, map[string]interface{}{}, "操作成功")
 }
 
-func OkWithMessage(message string, c *gin.Context) {
-	Result(http.StatusOK, map[string]interface{}{}, message, c)
+func OkWithMessage(c *gin.Context, message string) {
+	Result(c, http.StatusOK, map[string]interface{}{}, message)
 }
 
-func OkWithData(data interface{}, c *gin.Context) {
-	Result(http.StatusOK, data, "操作成功", c)
+func OkWithData(c *gin.Context, data interface{}) {
+	Result(c, http.StatusOK, data, "操作成功")
 }
 
-func OkWithDetailed(data interface{}, message string, c *gin.Context) {
-	Result(http.StatusOK, data, message, c)
+func OkWithDetailed(c *gin.Context, data interface{}, message string) {
+	Result(c, http.StatusOK, data, message)
 }
 
 func Fail(c *gin.Context) {
-	Result(http.StatusBadRequest, map[string]interface{}{}, "操作失败", c)
+	Result(c, http.StatusBadRequest, map[string]interface{}{}, "操作失败")
 }
 
-func FailWithMessage(message string, c *gin.Context) {
-	Result(http.StatusBadRequest, map[string]interface{}{}, message, c)
+func FailWithMessage(c *gin.Context, message string) {
+	Result(c, http.StatusBadRequest, map[string]interface{}{}, message)
 }
 
-func FailWithDetailed(data interface{}, message string, c *gin.Context) {
-	Result(http.StatusBadRequest, data, message, c)
+func FailWithDetailed(c *gin.Context, data interface{}, message string) {
+	Result(c, http.StatusBadRequest, data, message)
 }
 
-func FailAuthMessage(message string, c *gin.Context) {
-	Result(http.StatusUnauthorized, map[string]interface{}{}, message, c)
+func FailAuthMessage(c *gin.Context, message string) {
+	Result(c, http.StatusUnauthorized, map[string]interface{}{}, message)
 }
 
-func FailNotMessage(message string, c *gin.Context) {
-	Result(http.StatusNotFound, map[string]interface{}{}, message, c)
+func FailAuthsMessage(c *gin.Context, message string) {
+	Result(c, http.StatusForbidden, map[string]interface{}{}, message)
+}
+
+func FailNotMessage(c *gin.Context, message string) {
+	Result(c, http.StatusNotFound, map[string]interface{}{}, message)
 }

@@ -3,7 +3,7 @@ package logx
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/laydong/toolpkg/utils"
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"log"
@@ -55,10 +55,24 @@ func initSugar(lc *Config) *zap.Logger {
 
 }
 
+// GetRequestIdKey 获取链路ID
+func GetRequestIdKey(c *gin.Context) (requestId string) {
+	requestId = c.GetHeader(XtraceKey)
+	if requestId != "" {
+		c.Set(RequestIdKey, requestId)
+	}
+	requestId = c.GetString(RequestIdKey)
+	if requestId == "" {
+		requestId = uuid.New().String()
+		c.Set(RequestIdKey, requestId)
+	}
+	return
+}
+
 func InfoApi(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
 	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
-	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.String(RequestIdKey, GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "api_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
@@ -66,7 +80,7 @@ func InfoApi(c *gin.Context, template string, args ...interface{}) {
 func InfoSdk(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
 	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
-	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.String(RequestIdKey, GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "sdk_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
@@ -74,7 +88,7 @@ func InfoSdk(c *gin.Context, template string, args ...interface{}) {
 func InfoDB(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
 	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
-	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.String(RequestIdKey, GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "db_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
@@ -82,7 +96,7 @@ func InfoDB(c *gin.Context, template string, args ...interface{}) {
 func InfoF(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
 	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
-	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.String(RequestIdKey, GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "info_log"))
 	writers(Sugar, LevelInfo, msg, fields...)
 }
@@ -90,7 +104,7 @@ func InfoF(c *gin.Context, template string, args ...interface{}) {
 func WarnF(c *gin.Context, title string, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
 	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
-	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.String(RequestIdKey, GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "warn_log"))
 	writer(nil, Sugar, LevelWarn, msg, title, fields...)
 }
@@ -98,7 +112,7 @@ func WarnF(c *gin.Context, title string, template string, args ...interface{}) {
 func ErrorF(c *gin.Context, template string, args ...interface{}) {
 	msg, fields := dealWithArgs(template, args...)
 	fields = append(fields, zap.Any("datetime", time.Now().Format(TimeFormat)))
-	fields = append(fields, zap.String(RequestIdKey, utils.GetRequestIdKey(c)))
+	fields = append(fields, zap.String(RequestIdKey, GetRequestIdKey(c)))
 	fields = append(fields, zap.String(MessageType, "err_log"))
 	writers(Sugar, LevelError, msg, fields...)
 }

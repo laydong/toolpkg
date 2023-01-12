@@ -32,6 +32,8 @@ type DbPoolCfg struct {
 var DB *gorm.DB
 
 // InitDB init db
+//dsn string  示例 "账号:密码@tcp(服务器IP:端口)/数据库名?charset=utf8&parseTime=True&loc=Local"
+// dsn1  支持多个，后面为从库
 func InitDB(dsn string, dsn1 ...string) (db *gorm.DB, err error) {
 	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: logx.Default(logger.Info)})
 	if err != nil {

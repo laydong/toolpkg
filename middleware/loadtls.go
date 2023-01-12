@@ -7,6 +7,7 @@ import (
 	"net/http"
 )
 
+// LoadTls 开启https
 func LoadTls() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		middleware := secure.New(secure.Options{

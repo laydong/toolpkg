@@ -10,6 +10,9 @@ const (
 )
 
 // InitRdb 初始化redis
+//addr string "127.0.0.1:6379"
+//password  密码 可传空
+//num int DB 库
 func InitRdb(addr, password string, num int) (db *redis.Client, err error) {
 	options := redis.Options{
 		Addr:     addr,

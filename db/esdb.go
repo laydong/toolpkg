@@ -4,7 +4,10 @@ import (
 	"github.com/olivere/elastic/v6"
 )
 
-// InitEsClient ES初始化
+//InitEsClient ES初始化
+//dsn string http://127.0.0.1:9200
+//username 账号 可传空
+//password 密码
 func InitEsClient(addr, username, password string) (db *elastic.Client, err error) {
 	// 创建client连接ES
 	if username == "" || password == "" {

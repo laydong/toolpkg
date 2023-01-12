@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// NotRouter 处理未知请求路由
 func NotRouter() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.JSON(

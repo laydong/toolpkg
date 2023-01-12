@@ -28,6 +28,7 @@ require (
 	github.com/satori/go.uuid v1.2.0
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
+	github.com/unrolled/secure v1.13.0
 	go.mongodb.org/mongo-driver v1.10.0
 	go.uber.org/zap v1.21.0
 	google.golang.org/grpc v1.50.0

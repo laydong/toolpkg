@@ -18,5 +18,7 @@ func NoMethodHandle() gin.HandlerFunc {
 				"msg":        "当前请求方式不存在",
 				"request_id": c.GetString(logx.RequestIdKey),
 			})
+		c.Abort()
+		return
 	}
 }

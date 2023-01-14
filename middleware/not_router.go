@@ -17,5 +17,7 @@ func NotRouter() gin.HandlerFunc {
 				"msg":        "当前请求不存在",
 				"request_id": c.GetString(logx.RequestIdKey),
 			})
+		c.Abort()
+		return
 	}
 }

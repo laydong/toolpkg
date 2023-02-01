@@ -44,6 +44,7 @@ func MiddlewareApiLog(c *gin.Context) {
 		zap.Any("Resp_body", blw.body.String()),
 		zap.Any("status_code", c.Writer.Status()),
 		zap.Any("run_time", fmt.Sprintf("%.3fms", float64(time.Since(start).Nanoseconds())/1e6)),
+		zap.Any("run_time_long", time.Since(start)*time.Millisecond), //运行时长毫秒
 		zap.Any("error", strings.TrimRight(c.Errors.ByType(gin.ErrorTypePrivate).String(), "\n")),
 		zap.Any("source", c.GetHeader("app_name")),
 	)

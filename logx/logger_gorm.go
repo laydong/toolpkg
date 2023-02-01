@@ -131,7 +131,8 @@ func gormWriter(ctx context.Context, level string, rows int64, sql, slowLog, lin
 			zap.String("respon", errMsg),
 			zap.Any("start_time", float64(begin.UnixNano())/1e9),
 			zap.Any("end_time", float64(end.UnixNano())/1e9),
-			zap.String("runtime", runTime),
+			zap.String("run_time", runTime),
+			zap.Any("run_time_long", elapsed*time.Millisecond), //运行时长毫秒
 		)
 	case LevelWarn:
 		Warn(msg,
@@ -143,6 +144,7 @@ func gormWriter(ctx context.Context, level string, rows int64, sql, slowLog, lin
 			zap.Any("start_time", float64(begin.UnixNano())/1e9),
 			zap.Any("end_time", float64(end.UnixNano())/1e9),
 			zap.String("runtime", runTime),
+			zap.Any("run_time_long", elapsed*time.Millisecond), //运行时长毫秒
 		)
 	case LevelError:
 		Error(msg,
@@ -154,6 +156,7 @@ func gormWriter(ctx context.Context, level string, rows int64, sql, slowLog, lin
 			zap.Any("start_time", float64(begin.UnixNano())/1e9),
 			zap.Any("end_time", float64(end.UnixNano())/1e9),
 			zap.String("runtime", runTime),
+			zap.Any("run_time_long", elapsed*time.Millisecond), //运行时长毫秒
 		)
 		//	Error(msg, fields...)
 	}

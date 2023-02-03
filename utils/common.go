@@ -30,8 +30,8 @@ import (
 const (
 	XForwardedFor = "X-Forwarded-For"
 	XRealIP       = "X-Real-IP"
-	XtraceKey     = "trace-id"            //外部链路ID
-	RequestIdKey  = "request-id"          //链路ID
+	XtraceKey     = "trace_id"            //外部链路ID
+	RequestIdKey  = "request_id"          //链路ID
 	TimeFormat    = "2006-01-02 15:04:05" //默认时间
 )
 

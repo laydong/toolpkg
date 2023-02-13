@@ -20,7 +20,7 @@ func Result(c *gin.Context, code int, data interface{}, msg string) {
 			code,
 			data,
 			msg,
-			c.GetString("request-id"),
+			c.GetString(RequestIdKey),
 		})
 }
 
